@@ -1,0 +1,113 @@
+.page-stack {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.page-header h2,
+.page-header h1 {
+  margin: 0;
+}
+
+.page-header p {
+  margin-top: 0.35rem;
+  color: var(--muted);
+}
+
+.workout-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.workout-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.workout-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary-soft);
+}
+
+.workout-card__title {
+  margin: 0 0 0.85rem;
+}
+
+.workout-meta {
+  display: grid;
+  gap: 0.55rem;
+  margin: 0;
+}
+
+.workout-meta div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.workout-meta dt {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.workout-meta dd {
+  margin: 0;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.workout-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.empty-state {
+  padding: 2.5rem 1.5rem;
+  background: linear-gradient(180deg, rgba(255,255,255,0.78), rgba(255,255,255,0.62));
+  border: 1px solid rgba(255,255,255,0.55);
+  border-radius: var(--radius-xl);
+  text-align: center;
+  color: var(--muted);
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(12px);
+}
+
+.empty-state__icon {
+  width: 132px;
+  height: 132px;
+  margin: 0 auto 1.25rem;
+  border-radius: 32px;
+  display: grid;
+  place-items: center;
+  font-size: 3rem;
+  color: #7a7f8d;
+  background: rgba(31, 36, 48, 0.04);
+  box-shadow: inset 0 0 0 1px rgba(31, 36, 48, 0.04);
+}
+
+.empty-state__title {
+  margin: 0 0 0.75rem;
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+}
+
+.empty-state__text {
+  margin: 0 auto 1rem;
+  max-width: 520px;
+  font-size: 1.15rem;
+}
