@@ -1,55 +1,68 @@
 import API_URL from "./api";
 
-// TYPES
+export type WorkoutStatus = "PLANNED" | "DONE" | "SKIPPED";
+
+export interface WeekSummary {
+  id: string;
+  title: string;
+  startDate: string;
+  notes?: string | null;
+  isCompleted?: boolean;
+}
+
 export interface Exercise {
   id: string;
-  name: string;
-  sets: number;
-  reps: number;
-  weight?: number | null;
   workoutId: string;
+  name: string;
+  scheme: string;
+  weight?: number | null;
+  unit?: string | null;
+  comment?: string | null;
+  position: number;
+  completed: boolean;
+  completedAt?: string | null;
+  createdAt?: string;
 }
 
 export interface Workout {
   id: string;
-  name: string;
-  duration: number;
-  calories?: number | null;
-  date: string;
+  weekId: string;
+  dayOrder: number;
+  dayLabel: string;
+  focusTag?: string | null;
+  notes?: string | null;
+  date?: string | null;
+  status: WorkoutStatus;
+  completedAt?: string | null;
   createdAt?: string;
   updatedAt?: string;
+  week?: WeekSummary;
   exercises?: Exercise[];
 }
 
 export interface CreateWorkoutPayload {
-  name: string;
-  duration: number;
-  calories?: number | null;
-  date: string;
+  weekId: string;
+  dayOrder: number;
+  dayLabel: string;
+  focusTag?: string | null;
+  notes?: string | null;
+  date?: string | null;
+  status?: WorkoutStatus;
 }
 
 export interface UpdateWorkoutPayload {
-  name?: string;
-  duration?: number;
-  calories?: number | null;
-  date?: string;
+  weekId?: string;
+  dayOrder?: number;
+  dayLabel?: string;
+  focusTag?: string | null;
+  notes?: string | null;
+  date?: string | null;
+  status?: WorkoutStatus;
 }
 
-// 🔐 HELPER TOKEN
-const getAuthHeaders = () => {
-  const token = localStorage.getItem("token");
-
-  return {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${token}`,
-  };
-};
-
-// GET ALL
-export const getWorkouts = async (): Promise<Workout[]> => {
-  const response = await fetch(`${API_URL}/api/workouts`, {
-    headers: getAuthHeaders(),
-  });
+export const getWorkouts = async (params?: { weekId?: string }): Promise<Workout[]> => {
+  const query = params?.weekId ? `?weekId=${params.weekId}` : "";
+  const response = await fetch(`${API_URL}/api/workouts${query}`);
 
   if (!response.ok) {
     throw new Error("Failed to fetch workouts");
@@ -58,11 +71,8 @@ export const getWorkouts = async (): Promise<Workout[]> => {
   return response.json();
 };
 
-// GET ONE
 export const getWorkoutById = async (id: string): Promise<Workout> => {
-  const response = await fetch(`${API_URL}/api/workouts/${id}`, {
-    headers: getAuthHeaders(),
-  });
+  const response = await fetch(`${API_URL}/api/workouts/${id}`);
 
   if (!response.ok) {
     throw new Error("Failed to fetch workout");
@@ -71,21 +81,13 @@ export const getWorkoutById = async (id: string): Promise<Workout> => {
   return response.json();
 };
 
-// CREATE
-export const createWorkout = async (
-  payload: CreateWorkoutPayload
-): Promise<Workout> => {
+export const createWorkout = async (payload: CreateWorkoutPayload): Promise<Workout> => {
   const response = await fetch(`${API_URL}/api/workouts`, {
     method: "POST",
-    headers: getAuthHeaders(),
-    body: JSON.stringify({
-      weekId: "temp-week",
-      dayOrder: 1,
-      dayLabel: payload.name,
-      focusTag: null,
-      notes: null,
-      date: payload.date,
-    }),
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(payload)
   });
 
   if (!response.ok) {
@@ -95,15 +97,13 @@ export const createWorkout = async (
   return response.json();
 };
 
-// UPDATE
-export const updateWorkout = async (
-  id: string,
-  payload: UpdateWorkoutPayload
-): Promise<Workout> => {
+export const updateWorkout = async (id: string, payload: UpdateWorkoutPayload): Promise<Workout> => {
   const response = await fetch(`${API_URL}/api/workouts/${id}`, {
     method: "PUT",
-    headers: getAuthHeaders(),
-    body: JSON.stringify(payload),
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(payload)
   });
 
   if (!response.ok) {
@@ -113,11 +113,25 @@ export const updateWorkout = async (
   return response.json();
 };
 
-// DELETE
+export const updateWorkoutStatus = async (id: string, status: WorkoutStatus): Promise<Workout> => {
+  const response = await fetch(`${API_URL}/api/workouts/${id}/status`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ status })
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to update status");
+  }
+
+  return response.json();
+};
+
 export const deleteWorkout = async (id: string): Promise<void> => {
   const response = await fetch(`${API_URL}/api/workouts/${id}`, {
-    method: "DELETE",
-    headers: getAuthHeaders(),
+    method: "DELETE"
   });
 
   if (!response.ok) {
