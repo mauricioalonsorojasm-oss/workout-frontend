@@ -6,6 +6,7 @@ import EditWorkout from "./pages/EditWorkout";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import ErrorPage from "./pages/Error";
+import Login from "./components/Login"; // 👈 AÑADIDO
 import "./styles/app.css";
 
 function App() {
@@ -34,6 +35,12 @@ function App() {
             <Link to="/about">About</Link>
             <Link to="/contact">Contact</Link>
           </nav>
+
+          {/* 👇 LOGIN AÑADIDO */}
+          <div style={{ marginTop: "10px" }}>
+            <Login />
+          </div>
+
         </header>
 
         <main className="app-main">
