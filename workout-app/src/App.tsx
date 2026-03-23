@@ -1,5 +1,6 @@
 import { Routes, Route, Link } from "react-router-dom";
 import Homepage from "./pages/Homepage";
+import CreateWeek from "./pages/CreateWeek";
 import CreateWorkout from "./pages/CreateWorkout";
 import WorkoutDetails from "./pages/WorkoutDetails";
 import EditWorkout from "./pages/EditWorkout";
@@ -29,8 +30,9 @@ function App() {
           </div>
 
           <nav className="app-nav">
-            <Link to="/">Home</Link>
-            <Link to="/workouts/new">Create Workout</Link>
+            <Link to="/">Planner</Link>
+            <Link to="/weeks/new">Create Week</Link>
+            <Link to="/workouts/new">Add Day</Link>
             <Link to="/about">About</Link>
             <Link to="/contact">Contact</Link>
           </nav>
@@ -39,6 +41,7 @@ function App() {
         <main className="app-main">
           <Routes>
             <Route path="/" element={<Homepage />} />
+            <Route path="/weeks/new" element={<CreateWeek />} />
             <Route path="/workouts/new" element={<CreateWorkout />} />
             <Route path="/workouts/:id" element={<WorkoutDetails />} />
             <Route path="/workouts/:id/edit" element={<EditWorkout />} />
