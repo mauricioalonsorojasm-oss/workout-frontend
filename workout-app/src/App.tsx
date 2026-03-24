@@ -7,56 +7,58 @@ import EditWorkout from "./pages/EditWorkout";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import ErrorPage from "./pages/Error";
-import Login from "./components/Login"; // 👈 AÑADIDO
+import Login from "./components/Login";
+import PrivateRoute from "./components/PrivateRoute";
+import Footer from "./components/Footer";
+import { useAuth } from "./context/AuthContext";
 import "./styles/app.css";
 
 function App() {
+  const { user } = useAuth();
+
   return (
     <div className="app-shell">
       <div className="app-container">
-        <header className="app-header">
-          <div className="app-brand-card">
-            <div className="app-brand-row">
-              <div className="app-logo" aria-hidden="true">
-                <img src="/logo-gym.svg" alt="" />
-              </div>
-              <div className="app-brand-copy">
-                <p className="app-kicker">Workout tracker</p>
-                <h1 className="app-title">Workout Tracker</h1>
-              </div>
+        {user ? (
+          <header className="navbar">
+            <div className="navbar-brand">
+              <img src="/logo-gym.svg" alt="Workout Tracker" className="navbar-logo" />
+              <span className="navbar-title">Workout Tracker</span>
             </div>
-            <p className="app-subtitle">
-              Track sessions, keep your training organized, and build consistency with a clean modern workflow.
-            </p>
-          </div>
 
-          <nav className="app-nav">
-            <Link to="/">Planner</Link>
-            <Link to="/weeks/new">Create Week</Link>
-            <Link to="/workouts/new">Add Day</Link>
-            <Link to="/about">About</Link>
-            <Link to="/contact">Contact</Link>
-          </nav>
+            <nav className="navbar-links">
+              <Link to="/">Planner</Link>
+              <Link to="/weeks/new">Create Week</Link>
+              <Link to="/workouts/new">Add Day</Link>
+            </nav>
 
-          {/* 👇 LOGIN AÑADIDO */}
-          <div style={{ marginTop: "10px" }}>
-            <Login />
-          </div>
-
-        </header>
+            <div className="navbar-user">
+              <Login />
+            </div>
+          </header>
+        ) : (
+          <header className="brand-header">
+            <div className="brand-header-logo">
+              <img src="/logo-gym.svg" alt="" />
+            </div>
+            <span className="brand-header-title">Workout Tracker</span>
+          </header>
+        )}
 
         <main className="app-main">
           <Routes>
-            <Route path="/" element={<Homepage />} />
-            <Route path="/weeks/new" element={<CreateWeek />} />
-            <Route path="/workouts/new" element={<CreateWorkout />} />
-            <Route path="/workouts/:id" element={<WorkoutDetails />} />
-            <Route path="/workouts/:id/edit" element={<EditWorkout />} />
+            <Route path="/" element={<PrivateRoute><Homepage /></PrivateRoute>} />
+            <Route path="/weeks/new" element={<PrivateRoute><CreateWeek /></PrivateRoute>} />
+            <Route path="/workouts/new" element={<PrivateRoute><CreateWorkout /></PrivateRoute>} />
+            <Route path="/workouts/:id" element={<PrivateRoute><WorkoutDetails /></PrivateRoute>} />
+            <Route path="/workouts/:id/edit" element={<PrivateRoute><EditWorkout /></PrivateRoute>} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="*" element={<ErrorPage />} />
           </Routes>
         </main>
+
+        <Footer />
       </div>
     </div>
   );

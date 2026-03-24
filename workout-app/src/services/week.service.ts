@@ -1,4 +1,4 @@
-import API_URL from "./api";
+import API_URL, { getAuthHeaders } from "./api";
 import type { Workout } from "./workout.service";
 
 export interface Week {
@@ -30,7 +30,9 @@ export interface UpdateWeekPayload {
 
 export const getWeeks = async (options?: { full?: boolean }): Promise<Week[]> => {
   const query = options?.full ? "?full=true" : "";
-  const response = await fetch(`${API_URL}/api/weeks${query}`);
+  const response = await fetch(`${API_URL}/api/weeks${query}`, {
+    headers: { ...getAuthHeaders() }
+  });
 
   if (!response.ok) {
     throw new Error("Failed to fetch weeks");
@@ -40,7 +42,9 @@ export const getWeeks = async (options?: { full?: boolean }): Promise<Week[]> =>
 };
 
 export const getWeekById = async (id: string): Promise<Week> => {
-  const response = await fetch(`${API_URL}/api/weeks/${id}`);
+  const response = await fetch(`${API_URL}/api/weeks/${id}`, {
+    headers: { ...getAuthHeaders() }
+  });
 
   if (!response.ok) {
     throw new Error("Failed to fetch week");
@@ -53,7 +57,8 @@ export const createWeek = async (payload: CreateWeekPayload): Promise<Week> => {
   const response = await fetch(`${API_URL}/api/weeks`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
+      ...getAuthHeaders()
     },
     body: JSON.stringify(payload)
   });
@@ -69,7 +74,8 @@ export const updateWeek = async (id: string, payload: UpdateWeekPayload): Promis
   const response = await fetch(`${API_URL}/api/weeks/${id}`, {
     method: "PATCH",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
+      ...getAuthHeaders()
     },
     body: JSON.stringify(payload)
   });
@@ -85,13 +91,14 @@ export const toggleWeekCompletion = async (id: string, isCompleted: boolean): Pr
   const response = await fetch(`${API_URL}/api/weeks/${id}/complete`, {
     method: "PATCH",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
+      ...getAuthHeaders()
     },
     body: JSON.stringify({ isCompleted })
   });
 
   if (!response.ok) {
-    throw new Error("Failed to toggle week" );
+    throw new Error("Failed to toggle week");
   }
 
   return response.json();
@@ -99,7 +106,8 @@ export const toggleWeekCompletion = async (id: string, isCompleted: boolean): Pr
 
 export const deleteWeek = async (id: string): Promise<void> => {
   const response = await fetch(`${API_URL}/api/weeks/${id}`, {
-    method: "DELETE"
+    method: "DELETE",
+    headers: { ...getAuthHeaders() }
   });
 
   if (!response.ok) {
