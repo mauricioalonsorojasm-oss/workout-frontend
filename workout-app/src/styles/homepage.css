@@ -93,10 +93,10 @@
 }
 
 .day-card {
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 1.25rem;
-  background: linear-gradient(160deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+  background: rgba(255, 255, 255, 0.55);
   backdrop-filter: blur(8px);
   min-height: 320px;
   display: flex;

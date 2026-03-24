@@ -1,4 +1,4 @@
-import API_URL from "./api";
+import API_URL, { getAuthHeaders } from "./api";
 import type { Exercise } from "./workout.service";
 
 export interface CreateExercisePayload {
@@ -24,7 +24,9 @@ export interface UpdateExercisePayload {
 
 export const getExercises = async (params?: { workoutId?: string }): Promise<Exercise[]> => {
   const query = params?.workoutId ? `?workoutId=${params.workoutId}` : "";
-  const response = await fetch(`${API_URL}/api/exercises${query}`);
+  const response = await fetch(`${API_URL}/api/exercises${query}`, {
+    headers: { ...getAuthHeaders() }
+  });
 
   if (!response.ok) {
     throw new Error("Failed to fetch exercises");
@@ -37,7 +39,8 @@ export const createExercise = async (payload: CreateExercisePayload): Promise<Ex
   const response = await fetch(`${API_URL}/api/exercises`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
+      ...getAuthHeaders()
     },
     body: JSON.stringify(payload)
   });
@@ -53,7 +56,8 @@ export const updateExercise = async (id: string, payload: UpdateExercisePayload)
   const response = await fetch(`${API_URL}/api/exercises/${id}`, {
     method: "PUT",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
+      ...getAuthHeaders()
     },
     body: JSON.stringify(payload)
   });
@@ -67,7 +71,8 @@ export const updateExercise = async (id: string, payload: UpdateExercisePayload)
 
 export const toggleExerciseCompletion = async (id: string): Promise<Exercise> => {
   const response = await fetch(`${API_URL}/api/exercises/${id}/toggle`, {
-    method: "PATCH"
+    method: "PATCH",
+    headers: { ...getAuthHeaders() }
   });
 
   if (!response.ok) {
@@ -79,7 +84,8 @@ export const toggleExerciseCompletion = async (id: string): Promise<Exercise> =>
 
 export const deleteExercise = async (id: string): Promise<void> => {
   const response = await fetch(`${API_URL}/api/exercises/${id}`, {
-    method: "DELETE"
+    method: "DELETE",
+    headers: { ...getAuthHeaders() }
   });
 
   if (!response.ok) {

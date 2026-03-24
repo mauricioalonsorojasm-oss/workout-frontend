@@ -1,26 +1,27 @@
 import { GoogleLogin } from "@react-oauth/google";
-import axios from "axios";
+import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
-  return (
-    <div style={{ marginTop: "20px" }}>
-      <GoogleLogin
-        onSuccess={async (res: any) => {
-          console.log("GOOGLE TOKEN:", res);
+  const { user, login, logout } = useAuth();
 
-          const token = res.credential;
+  if (user) {
+    return (
+      <div className="app-user">
+        {user.picture && (
+          <img
+            src={user.picture}
+            alt={user.name ?? ""}
+            referrerPolicy="no-referrer"
+            style={{ width: 36, height: 36, borderRadius: "50%", objectFit: "cover" }}
+          />
+        )}
+        <span>{user.name}</span>
+        <button onClick={logout}>Logout</button>
+      </div>
+    );
+  }
 
-          const response = await axios.post(
-            "http://localhost:5005/auth/google",
-            { token }
-          );
-
-          localStorage.setItem("token", response.data.token);
-        }}
-        onError={() => console.log("Login failed")}
-      />
-    </div>
-  );
+  return null;
 };
 
 export default Login;

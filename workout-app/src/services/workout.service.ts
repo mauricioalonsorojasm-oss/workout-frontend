@@ -1,4 +1,4 @@
-import API_URL from "./api";
+import API_URL, { getAuthHeaders } from "./api";
 
 export type WorkoutStatus = "PLANNED" | "DONE" | "SKIPPED";
 
@@ -62,7 +62,9 @@ export interface UpdateWorkoutPayload {
 
 export const getWorkouts = async (params?: { weekId?: string }): Promise<Workout[]> => {
   const query = params?.weekId ? `?weekId=${params.weekId}` : "";
-  const response = await fetch(`${API_URL}/api/workouts${query}`);
+  const response = await fetch(`${API_URL}/api/workouts${query}`, {
+    headers: { ...getAuthHeaders() }
+  });
 
   if (!response.ok) {
     throw new Error("Failed to fetch workouts");
@@ -72,7 +74,9 @@ export const getWorkouts = async (params?: { weekId?: string }): Promise<Workout
 };
 
 export const getWorkoutById = async (id: string): Promise<Workout> => {
-  const response = await fetch(`${API_URL}/api/workouts/${id}`);
+  const response = await fetch(`${API_URL}/api/workouts/${id}`, {
+    headers: { ...getAuthHeaders() }
+  });
 
   if (!response.ok) {
     throw new Error("Failed to fetch workout");
@@ -85,7 +89,8 @@ export const createWorkout = async (payload: CreateWorkoutPayload): Promise<Work
   const response = await fetch(`${API_URL}/api/workouts`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
+      ...getAuthHeaders()
     },
     body: JSON.stringify(payload)
   });
@@ -101,7 +106,8 @@ export const updateWorkout = async (id: string, payload: UpdateWorkoutPayload): 
   const response = await fetch(`${API_URL}/api/workouts/${id}`, {
     method: "PUT",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
+      ...getAuthHeaders()
     },
     body: JSON.stringify(payload)
   });
@@ -117,7 +123,8 @@ export const updateWorkoutStatus = async (id: string, status: WorkoutStatus): Pr
   const response = await fetch(`${API_URL}/api/workouts/${id}/status`, {
     method: "PATCH",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
+      ...getAuthHeaders()
     },
     body: JSON.stringify({ status })
   });
@@ -131,7 +138,8 @@ export const updateWorkoutStatus = async (id: string, status: WorkoutStatus): Pr
 
 export const deleteWorkout = async (id: string): Promise<void> => {
   const response = await fetch(`${API_URL}/api/workouts/${id}`, {
-    method: "DELETE"
+    method: "DELETE",
+    headers: { ...getAuthHeaders() }
   });
 
   if (!response.ok) {
