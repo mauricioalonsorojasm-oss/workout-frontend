@@ -71,6 +71,7 @@ export const getWorkouts = async (params?: { weekId?: string }): Promise<Workout
   return response.json();
 };
 
+// GET ONE
 export const getWorkoutById = async (id: string): Promise<Workout> => {
   const response = await fetch(`${API_URL}/api/workouts/${id}`);
 
@@ -129,6 +130,7 @@ export const updateWorkoutStatus = async (id: string, status: WorkoutStatus): Pr
   return response.json();
 };
 
+// DELETE
 export const deleteWorkout = async (id: string): Promise<void> => {
   const response = await fetch(`${API_URL}/api/workouts/${id}`, {
     method: "DELETE"
